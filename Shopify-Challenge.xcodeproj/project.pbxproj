@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4A62DE021E7EAF10069FA5F /* APIDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A62DDF21E7EAF10069FA5F /* APIDataRequest.swift */; };
+		D4A62DE221E7EB7E0069FA5F /* APICallFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A62DE121E7EB7E0069FA5F /* APICallFlags.swift */; };
+		D4A62DE421E7EB9C0069FA5F /* UpdateViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A62DE321E7EB9C0069FA5F /* UpdateViewProtocol.swift */; };
 		D4B570F521E7E77600AD0F4B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B570F421E7E77600AD0F4B /* AppDelegate.swift */; };
 		D4B570F721E7E77600AD0F4B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B570F621E7E77600AD0F4B /* ViewController.swift */; };
 		D4B570FA21E7E77600AD0F4B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4B570F821E7E77600AD0F4B /* Main.storyboard */; };
@@ -18,6 +21,9 @@
 /* Begin PBXFileReference section */
 		8B24643EA3D2E8249C63C73C /* Pods-Shopify-Challenge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shopify-Challenge.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shopify-Challenge/Pods-Shopify-Challenge.release.xcconfig"; sourceTree = "<group>"; };
 		CD6924F11085005A096D72C4 /* Pods-Shopify-Challenge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shopify-Challenge.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shopify-Challenge/Pods-Shopify-Challenge.debug.xcconfig"; sourceTree = "<group>"; };
+		D4A62DDF21E7EAF10069FA5F /* APIDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDataRequest.swift; sourceTree = "<group>"; };
+		D4A62DE121E7EB7E0069FA5F /* APICallFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICallFlags.swift; sourceTree = "<group>"; };
+		D4A62DE321E7EB9C0069FA5F /* UpdateViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewProtocol.swift; sourceTree = "<group>"; };
 		D4B570F121E7E77600AD0F4B /* Shopify-Challenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Shopify-Challenge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4B570F421E7E77600AD0F4B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D4B570F621E7E77600AD0F4B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -52,6 +58,9 @@
 		D4A62DDC21E7E8620069FA5F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D4A62DDF21E7EAF10069FA5F /* APIDataRequest.swift */,
+				D4A62DE121E7EB7E0069FA5F /* APICallFlags.swift */,
+				D4A62DE321E7EB9C0069FA5F /* UpdateViewProtocol.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -59,8 +68,8 @@
 		D4A62DDD21E7E8690069FA5F /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D4B570F821E7E77600AD0F4B /* Main.storyboard */,
 				D4B570FD21E7E77700AD0F4B /* LaunchScreen.storyboard */,
+				D4B570F821E7E77600AD0F4B /* Main.storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -236,8 +245,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4A62DE221E7EB7E0069FA5F /* APICallFlags.swift in Sources */,
 				D4B570F721E7E77600AD0F4B /* ViewController.swift in Sources */,
 				D4B570F521E7E77600AD0F4B /* AppDelegate.swift in Sources */,
+				D4A62DE421E7EB9C0069FA5F /* UpdateViewProtocol.swift in Sources */,
+				D4A62DE021E7EAF10069FA5F /* APIDataRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
