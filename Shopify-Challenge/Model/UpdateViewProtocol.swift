@@ -11,6 +11,6 @@ import SwiftyJSON
 
 protocol UpdateViewProtocol {
 	
-	func updateView(dictionary: [String : JSON])
+	func updateView()
 	
 }

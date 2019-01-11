@@ -17,6 +17,7 @@
 		D4B570FA21E7E77600AD0F4B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4B570F821E7E77600AD0F4B /* Main.storyboard */; };
 		D4B570FC21E7E77700AD0F4B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4B570FB21E7E77700AD0F4B /* Assets.xcassets */; };
 		D4B570FF21E7E77700AD0F4B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4B570FD21E7E77700AD0F4B /* LaunchScreen.storyboard */; };
+		D4E8042F21E9405B00F1D554 /* LoadImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8042E21E9405B00F1D554 /* LoadImage.swift */; };
 		F51CDE888FCDE1EDF9CFDE80 /* Pods_Shopify_Challenge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9C6A5EBB31CABBCBE558CF /* Pods_Shopify_Challenge.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		D4B570FB21E7E77700AD0F4B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D4B570FE21E7E77700AD0F4B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D4B5710021E7E77700AD0F4B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D4E8042E21E9405B00F1D554 /* LoadImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadImage.swift; sourceTree = "<group>"; };
 		FF9C6A5EBB31CABBCBE558CF /* Pods_Shopify_Challenge.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shopify_Challenge.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -65,6 +67,7 @@
 				D4A62DDF21E7EAF10069FA5F /* APIDataRequest.swift */,
 				D4A62DE121E7EB7E0069FA5F /* APICallFlags.swift */,
 				D4A62DE321E7EB9C0069FA5F /* UpdateViewProtocol.swift */,
+				D4E8042E21E9405B00F1D554 /* LoadImage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				D4B570F721E7E77600AD0F4B /* ViewController.swift in Sources */,
 				D4A62DEA21E80AD10069FA5F /* CollectionViewCell.swift in Sources */,
 				D4B570F521E7E77600AD0F4B /* AppDelegate.swift in Sources */,
+				D4E8042F21E9405B00F1D554 /* LoadImage.swift in Sources */,
 				D4A62DE421E7EB9C0069FA5F /* UpdateViewProtocol.swift in Sources */,
 				D4A62DE021E7EAF10069FA5F /* APIDataRequest.swift in Sources */,
 			);

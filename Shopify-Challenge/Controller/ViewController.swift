@@ -19,7 +19,7 @@ class ViewController: UIViewController, UpdateViewProtocol {
 		
 	}
 
-	func updateView(dictionary: [String : JSON]) {
+	func updateView() {
 		
 		
 		

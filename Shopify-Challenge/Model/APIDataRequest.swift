@@ -19,10 +19,13 @@ public class APIDataRequest {
 	
 	// JSON containing the data from the last request
 	private var JsonData: JSON?
-	private var formattedDictionary: Dictionary = [String : JSON]()
 	
-	// arrays of item IDs
+	// collection details
 	var collectionIDs: [Int]
+	var collectionTitles: [String]
+	var collectionImages: [String]
+	
+	// product details
 	var productIDs: [Int]
 	
 	// delegates
@@ -36,7 +39,12 @@ public class APIDataRequest {
 		
 		JsonData = nil
 		
+		// COLLECTIONS
 		collectionIDs = []
+		collectionTitles = []
+		collectionImages = []
+		
+		// PRODUCTS
 		productIDs = []
 		
 	}
@@ -59,34 +67,15 @@ public class APIDataRequest {
 				if let flag: APICallFlags = self.getUrlType(url: url) {
 					
 					self.extractIDs(json: self.JsonData!, flag: flag)
+					self.extractCollectionTitles(json: self.JsonData!, flag: flag)
+					self.extractCollectionImages(json: self.JsonData!, flag: flag)
 					
 					// update the UI
-					self.jsonToDictionary(json: self.JsonData!, flag: flag)
-					self.viewDelegate?.updateView(dictionary: self.formattedDictionary)
+					self.viewDelegate?.updateView()
 					
 				}
 			}
 		}
-	}
-	
-	private func jsonToDictionary(json: JSON, flag: APICallFlags) {
-		
-		var retDictionary: Dictionary = [String : JSON]()
-		
-		if let collection: (name: String, id: String) = getCollectionQueryVals(flag: flag) {
-			
-			let collectionName: String = collection.name
-			let collectionId: String = collection.id
-			
-			for collection in json[collectionName] {
-				
-				retDictionary["\(collection.1[collectionId])"] = collection.1
-				
-			}
-		}
-		
-		self.formattedDictionary = retDictionary
-		
 	}
 	
 	private func getUrlType(url: String) -> APICallFlags? {
@@ -136,6 +125,34 @@ public class APIDataRequest {
 			
 			
 		}
+	}
+	
+	private func extractCollectionTitles(json: JSON, flag: APICallFlags) {
+		
+		if flag == APICallFlags.allCollections {
+			
+			for index in json["custom_collections"] {
+				
+				self.collectionTitles.append(index.1["title"].stringValue.replacingOccurrences(of: " collection", with: ""))
+				
+			}
+			
+		}
+		
+	}
+	
+	private func extractCollectionImages(json: JSON, flag: APICallFlags) {
+		
+		if flag == APICallFlags.allCollections {
+			
+			for index in json["custom_collections"] {
+				
+				self.collectionImages.append(index.1["image"]["src"].stringValue)
+				
+			}
+			
+		}
+		
 	}
 	
 	private func getCollectionQueryVals(flag: APICallFlags) -> (String, String)? {

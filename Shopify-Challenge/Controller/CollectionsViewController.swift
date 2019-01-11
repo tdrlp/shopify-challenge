@@ -9,10 +9,9 @@
 import UIKit
 import SwiftyJSON
 
-class CollectionsViewController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UpdateViewProtocol {
+class CollectionsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UpdateViewProtocol {
 	
 	private let data = APIDataRequest()
-	private var dataDictionary: Dictionary = [String : JSON]()
 
 	private let cellIdentifier = "collectionCell"
 	
@@ -47,9 +46,9 @@ class CollectionsViewController: UICollectionViewController, UITextFieldDelegate
 	// return size of each square including padding
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		
-		let paddingSpace = sectionInsets.left * (4)
+		let paddingSpace = sectionInsets.left * (3)
 		let availableWidth = view.frame.width - paddingSpace
-		let widthPerItem = availableWidth / 3
+		let widthPerItem = availableWidth / 2
 		
 		return CGSize(width: widthPerItem, height: widthPerItem)
 		
@@ -74,51 +73,24 @@ class CollectionsViewController: UICollectionViewController, UITextFieldDelegate
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! CollectionViewCell
 		cell.backgroundColor = .white
 		
-		if indexPath.item < dataDictionary.count {
+		if indexPath.item < data.collectionIDs.count {
+				
+			// set the cell label
+			cell.cellLabel.text = data.collectionTitles[indexPath.item]
 			
-			if let text = dataDictionary["\(data.collectionIDs[indexPath.item])"] {
+			if let image = LoadImage.load(imageName: data.collectionTitles[indexPath.item], imageSrc: data.collectionImages[indexPath.item]) {
 				
-				let title: String = "\(text["title"])"
+				cell.cellImage.image = image
 				
-				// set the cell label
-				cell.cellLabel.text = title.replacingOccurrences(of: " collection", with: "")
-				
-				// set the cell image
-				if let url = URL(string: "\(text["image"]["src"])") {
-					
-					let urlData = try? Data(contentsOf: url)
-					
-					if let imgData = urlData {
-						
-						cell.cellImage.image = UIImage(data: imgData)
-						
-					}
-				}
 			}
-		}
-		
+		}		
 		
 		return cell
 		
 	}
 	
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+	func updateView() {
 		
-		let activityIndicator = UIActivityIndicatorView(style: .gray)
-		textField.addSubview(activityIndicator)
-		activityIndicator.frame = textField.bounds
-		activityIndicator.startAnimating()
-		
-		textField.text = nil
-		textField.resignFirstResponder()
-		
-		return true
-		
-	}
-	
-	func updateView(dictionary: [String : JSON]) {
-		
-		self.dataDictionary = dictionary
 		self.collectionView.reloadData()
 		
 	}
