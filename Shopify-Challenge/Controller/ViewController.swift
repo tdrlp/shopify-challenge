@@ -11,15 +11,12 @@ import SwiftyJSON
 
 class ViewController: UIViewController, UpdateViewProtocol {
 
-	private let data = APIDataRequest()
+	
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		data.viewDelegate = self
 		
-		// get data to fill collections with
-		data.requestData(url: data.collectionsURL)
 	}
 
 	func updateView(dictionary: [String : JSON]) {
