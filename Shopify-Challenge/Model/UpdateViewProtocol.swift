@@ -9,8 +9,9 @@
 import Foundation
 import SwiftyJSON
 
-protocol UpdateViewProtocol {
+@objc protocol UpdateViewProtocol {
 	
 	func updateView()
+	@objc optional func productListUpdated()
 	
 }

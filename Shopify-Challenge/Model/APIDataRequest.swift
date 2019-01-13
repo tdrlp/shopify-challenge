@@ -14,8 +14,6 @@ public class APIDataRequest {
 	
 	// URLs used for the API calls
 	let collectionsURL: String
-	private var specificCollectionURL: String
-	private var specificProductsURL: String
 	
 	// JSON containing the data from the last request
 	private var JsonData: JSON?
@@ -34,8 +32,6 @@ public class APIDataRequest {
 	init() {
 		
 		collectionsURL = "https://shopicruit.myshopify.com/admin/custom_collections.json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6"
-		specificCollectionURL = ""
-		specificProductsURL = ""
 		
 		JsonData = nil
 		
@@ -63,14 +59,28 @@ public class APIDataRequest {
 				// save the returned json
 				self.JsonData = JSON(json)
 				
+				guard let flag: APICallFlags = self.getUrlType(url: url) else {	return }
+				
 				// determine which json was requested
-				if let flag: APICallFlags = self.getUrlType(url: url) {
+				if flag == APICallFlags.allCollections {
 					
 					self.extractIDs(json: self.JsonData!, flag: flag)
-					self.extractCollectionTitles(json: self.JsonData!, flag: flag)
-					self.extractCollectionImages(json: self.JsonData!, flag: flag)
+					self.extractCollectionDetails(json: self.JsonData!)
 					
 					// update the UI
+					self.viewDelegate?.updateView()
+					
+				}
+				else if flag == APICallFlags.collection {
+					
+					self.extractIDs(json: self.JsonData!, flag: flag)
+					
+					// let the controller know that the product list was updated
+					self.viewDelegate?.productListUpdated!()
+					
+				}
+				else if flag == APICallFlags.products {
+					
 					self.viewDelegate?.updateView()
 					
 				}
@@ -127,29 +137,12 @@ public class APIDataRequest {
 		}
 	}
 	
-	private func extractCollectionTitles(json: JSON, flag: APICallFlags) {
+	private func extractCollectionDetails(json: JSON) {
 		
-		if flag == APICallFlags.allCollections {
+		for index in json["custom_collections"] {
 			
-			for index in json["custom_collections"] {
-				
-				self.collectionTitles.append(index.1["title"].stringValue.replacingOccurrences(of: " collection", with: ""))
-				
-			}
-			
-		}
-		
-	}
-	
-	private func extractCollectionImages(json: JSON, flag: APICallFlags) {
-		
-		if flag == APICallFlags.allCollections {
-			
-			for index in json["custom_collections"] {
-				
-				self.collectionImages.append(index.1["image"]["src"].stringValue)
-				
-			}
+			self.collectionTitles.append(index.1["title"].stringValue.replacingOccurrences(of: " collection", with: ""))
+			self.collectionImages.append(index.1["image"]["src"].stringValue)
 			
 		}
 		
