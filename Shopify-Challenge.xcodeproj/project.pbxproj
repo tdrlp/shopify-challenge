@@ -19,6 +19,8 @@
 		D4E8042F21E9405B00F1D554 /* LoadImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8042E21E9405B00F1D554 /* LoadImage.swift */; };
 		D4E8043121EAC86100F1D554 /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8043021EAC86100F1D554 /* ProductsViewController.swift */; };
 		D4E8043321EADFB400F1D554 /* ProductViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8043221EADFB400F1D554 /* ProductViewCell.swift */; };
+		D4E8043721EC268700F1D554 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8043621EC268700F1D554 /* Collection.swift */; };
+		D4E8043921EC28F100F1D554 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8043821EC28F100F1D554 /* Product.swift */; };
 		F51CDE888FCDE1EDF9CFDE80 /* Pods_Shopify_Challenge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9C6A5EBB31CABBCBE558CF /* Pods_Shopify_Challenge.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +41,8 @@
 		D4E8042E21E9405B00F1D554 /* LoadImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadImage.swift; sourceTree = "<group>"; };
 		D4E8043021EAC86100F1D554 /* ProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewController.swift; sourceTree = "<group>"; };
 		D4E8043221EADFB400F1D554 /* ProductViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewCell.swift; sourceTree = "<group>"; };
+		D4E8043621EC268700F1D554 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
+		D4E8043821EC28F100F1D554 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		FF9C6A5EBB31CABBCBE558CF /* Pods_Shopify_Challenge.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shopify_Challenge.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -70,6 +74,8 @@
 				D4A62DE121E7EB7E0069FA5F /* APICallFlags.swift */,
 				D4A62DE321E7EB9C0069FA5F /* UpdateViewProtocol.swift */,
 				D4E8042E21E9405B00F1D554 /* LoadImage.swift */,
+				D4E8043621EC268700F1D554 /* Collection.swift */,
+				D4E8043821EC28F100F1D554 /* Product.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -258,9 +264,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4A62DE821E7F1BF0069FA5F /* CollectionsViewController.swift in Sources */,
+				D4E8043721EC268700F1D554 /* Collection.swift in Sources */,
 				D4A62DE221E7EB7E0069FA5F /* APICallFlags.swift in Sources */,
 				D4A62DEA21E80AD10069FA5F /* CollectionViewCell.swift in Sources */,
 				D4B570F521E7E77600AD0F4B /* AppDelegate.swift in Sources */,
+				D4E8043921EC28F100F1D554 /* Product.swift in Sources */,
 				D4E8042F21E9405B00F1D554 /* LoadImage.swift in Sources */,
 				D4E8043121EAC86100F1D554 /* ProductsViewController.swift in Sources */,
 				D4A62DE421E7EB9C0069FA5F /* UpdateViewProtocol.swift in Sources */,

@@ -18,9 +18,7 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 	private let sectionInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
 	private let collectionsPerRow: Int = 2
 	
-	private var selectedCellTitle: String?
-	private var selectedCellImage: String?
-	private var selectedCellCollectionID: Int?
+	private var selectedCollectionIndex: Int?
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -34,7 +32,7 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 		SVProgressHUD.show()
 		
 		// get data to fill collections with
-		data.requestData(url: data.collectionsURL)
+		data.requestData(url: APIDataRequest.collectionsURL)
 		
 		// search button
 		let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
@@ -49,8 +47,8 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 	
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		
-		print(data.collectionIDs.count)
-		return data.collectionIDs.count
+		print("THERE ARE: \(data.collections.count) COLLECTIONS")
+		return data.collections.count
 		
 	}
 	
@@ -60,7 +58,7 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 		let paddingSpace = sectionInsets.left * CGFloat(collectionsPerRow * 2)
 		let availableWidth = view.frame.width - paddingSpace
 		let widthPerItem = availableWidth / CGFloat(collectionsPerRow)
-		let heightPerItem = view.frame.height / CGFloat(collectionsPerRow + (collectionsPerRow - 1))
+		let heightPerItem = CGFloat(180.0)
 
 		return CGSize(width: widthPerItem, height: heightPerItem)
 
@@ -91,16 +89,16 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 		cell.layer.shadowColor = UIColor.black.cgColor
 		cell.layer.shadowOffset = CGSize(width: 0, height: 2)
 		cell.layer.shadowRadius = 20.0
-		cell.layer.shadowOpacity = 0.2
+		cell.layer.shadowOpacity = 0.1
 		cell.layer.masksToBounds = false
 		cell.layer.shadowPath = UIBezierPath(roundedRect: cell.layer.bounds, cornerRadius: cell.layer.cornerRadius).cgPath
 		
-		if indexPath.item < data.collectionIDs.count {
+		if indexPath.item < data.collections.count {
 				
 			// set the cell label
-			cell.cellLabel.text = data.collectionTitles[indexPath.item]
+			cell.cellLabel.text = data.collections[indexPath.item].title
 			
-			if let image = LoadImage.load(imageName: data.collectionTitles[indexPath.item], imageSrc: data.collectionImages[indexPath.item]) {
+			if let image = LoadImage.load(imageName: data.collections[indexPath.item].title, imageSrc: data.collections[indexPath.item].image["url"] as! String) {
 				
 				cell.cellImage.image = image
 				
@@ -113,9 +111,7 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 	
 	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		
-		self.selectedCellTitle = data.collectionTitles[indexPath.item]
-		self.selectedCellImage = data.collectionImages[indexPath.item]
-		self.selectedCellCollectionID = data.collectionIDs[indexPath.item]
+		self.selectedCollectionIndex = indexPath.item
 		
 		performSegue(withIdentifier: "goToProductsPage", sender: self)
 		
@@ -126,9 +122,8 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 		if segue.identifier == "goToProductsPage" {
 			
 			let destinationVC: ProductsViewController = segue.destination as! ProductsViewController
-			destinationVC.collectionTitle = self.selectedCellTitle
-			destinationVC.collectionImage = self.selectedCellImage
-			destinationVC.collectionID = self.selectedCellCollectionID
+			destinationVC.data = self.data
+			destinationVC.selectedCollectionIndex = self.selectedCollectionIndex
 			
 		}
 		

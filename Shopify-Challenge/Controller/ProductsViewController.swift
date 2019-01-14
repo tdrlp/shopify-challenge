@@ -11,37 +11,36 @@ import SVProgressHUD
 
 class ProductsViewController: UITableViewController, UpdateViewProtocol {
 	
-	var collectionTitle: String?
-	var collectionImage: String?
-	var collectionID: Int?
+	var data: APIDataRequest = APIDataRequest()
+	var selectedCollectionIndex: Int?
 	
 	private let cellIdentifier: String = "productCell"
-	
-	private let data = APIDataRequest()
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		navigationItem.title = "Details"
+		navigationItem.title = "Products"
 		navigationController?.navigationBar.prefersLargeTitles = true
-		self.title = "Details"
+		self.title = "Products"
 		
 		data.viewDelegate = self
 		tableView.delegate = self
 		tableView.dataSource = self
 		
 		// request the collection product list
-		if let id = collectionID {
+		if selectedCollectionIndex != nil {
 			
+			let id = data.collections[selectedCollectionIndex!].id
 			data.requestData(url: data.getCollectionURL(collectionID: id))
 			
+			print(data.products)
 		}
 		
 		SVProgressHUD.show()
 		
-		print("title: \(collectionTitle!)")
-		print("id: \(collectionID!)")
-		print("img: \(collectionImage!)")
+		// filter button
+		let filterButton = UIBarButtonItem(title: "Filter", style: .done, target: self, action: nil)
+		navigationItem.rightBarButtonItem = filterButton
 		
 	}
 	
@@ -51,24 +50,37 @@ class ProductsViewController: UITableViewController, UpdateViewProtocol {
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
-		return data.productIDs.count
+		print("THERE ARE: \(data.products.count) PRODUCTS")
+		return data.products.count
 		
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
 		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! ProductViewCell
-		cell.cellProductName.text = String(data.productIDs[indexPath.row])
+		cell.cellProductName.text = data.products[indexPath.row].title
+		cell.cellProductInventory.text = "x\(data.products[indexPath.row].inventory)"
 		
-		guard let title = collectionTitle else { return cell }
-		guard let image = collectionImage else { return cell }
-		
-		cell.cellCollectionName.text = title
-		cell.cellProductInventory.text = "x100"
-		
-		if let image = LoadImage.load(imageName: title, imageSrc: image) {
+		if let image = LoadImage.load(imageName: cell.cellProductName.text!, imageSrc: data.products[indexPath.row].image["url"] as! String) {
 			
-			cell.cellImage.image = image
+			cell.cellProductImage.image = image
+			cell.cellProductImage.layer.borderWidth = 0.5
+			
+		}
+		
+		let collectionTitle = data.collections[selectedCollectionIndex!].title
+		let collectionImg = data.collections[selectedCollectionIndex!].image["url"]
+		
+		cell.cellCollectionName.text = collectionTitle
+		
+		if let image = LoadImage.load(imageName: collectionTitle, imageSrc: collectionImg as! String) {
+			
+			cell.cellCollectionImage.image = image
+			cell.cellCollectionImage.layer.borderWidth = 1
+			cell.cellCollectionImage.layer.masksToBounds = false
+			cell.cellCollectionImage.layer.borderColor = UIColor.black.cgColor
+			cell.cellCollectionImage.layer.cornerRadius = cell.cellCollectionImage.frame.height/2
+			cell.cellCollectionImage.clipsToBounds = true
 			
 		}
 		
@@ -78,7 +90,7 @@ class ProductsViewController: UITableViewController, UpdateViewProtocol {
 	
 	func updateView() {
 		
-		print("\(data.productIDs)")
+		print("\(data.products)")
 		self.tableView.reloadData()
 		SVProgressHUD.dismiss()
 		
@@ -86,7 +98,12 @@ class ProductsViewController: UITableViewController, UpdateViewProtocol {
 	
 	func productListUpdated() {
 		
-		data.requestData(url: data.getProductsURL())
+		if let url = data.getProductsURL() {
+			
+			data.requestData(url: url)
+			
+		}
+		
 		
 	}
 	

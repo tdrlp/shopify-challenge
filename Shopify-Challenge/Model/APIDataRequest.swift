@@ -13,41 +13,26 @@ import Alamofire
 public class APIDataRequest {
 	
 	// URLs used for the API calls
-	let collectionsURL: String
+	static let collectionsURL: String = "https://shopicruit.myshopify.com/admin/custom_collections.json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6"
 	
 	// JSON containing the data from the last request
 	private var JsonData: JSON?
+	private var selectedCollectionID: Int?
 	
-	// collection details
-	var collectionIDs: [Int]
-	var collectionTitles: [String]
-	var collectionImages: [String]
-	
-	// product details
-	var productIDs: [Int]
+	var collections: [Collection] = []
+	var products: [Product] = []
 	
 	// delegates
 	var viewDelegate: UpdateViewProtocol?
 	
 	init() {
 		
-		collectionsURL = "https://shopicruit.myshopify.com/admin/custom_collections.json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6"
-		
 		JsonData = nil
-		
-		// COLLECTIONS
-		collectionIDs = []
-		collectionTitles = []
-		collectionImages = []
-		
-		// PRODUCTS
-		productIDs = []
 		
 	}
 	
 	//
 	func requestData(url: String) {
-		print("requesting data")
 		
 		Alamofire.request(url).responseJSON { (response) in
 			
@@ -64,7 +49,6 @@ public class APIDataRequest {
 				// determine which json was requested
 				if flag == APICallFlags.allCollections {
 					
-					self.extractIDs(json: self.JsonData!, flag: flag)
 					self.extractCollectionDetails(json: self.JsonData!)
 					
 					// update the UI
@@ -73,13 +57,17 @@ public class APIDataRequest {
 				}
 				else if flag == APICallFlags.collection {
 					
-					self.extractIDs(json: self.JsonData!, flag: flag)
+					guard let id = self.extractCollectionIDFromURL(url: url) else { return }
+					self.selectedCollectionID = id
+					self.extractCollectionProductIDs(json: self.JsonData!, collectionID: id)
 					
 					// let the controller know that the product list was updated
 					self.viewDelegate?.productListUpdated!()
 					
 				}
 				else if flag == APICallFlags.products {
+					
+					self.extractProductsInformation(json: self.JsonData!)
 					
 					self.viewDelegate?.updateView()
 					
@@ -104,62 +92,105 @@ public class APIDataRequest {
 		
 	}
 	
-	private func extractIDs(json: JSON, flag: APICallFlags) {
+	private func extractProductsInformation(json: JSON) {
+
+		var newProductList: [Product] = []
 		
-		// get the strings of elements to access
-		if let collection: (name: String, id: String) = getCollectionQueryVals(flag: flag) {
+		for product in json["products"] {
 			
-			var temp: [Int] = []
+			let tempProduct = Product()
 			
-			let collectionName: String = collection.name
-			let collectionId: String = collection.id
+			guard let collectionID = selectedCollectionID else { return }
 			
-			// fill the array with the IDs
-			for id in json[collectionName] {
+			// get the index of the requested collection
+			guard let collectionIndex: Int = collections.firstIndex(where: { $0.id == collectionID }) else { return }
+			
+			tempProduct.id = product.1["id"].intValue
+			tempProduct.title = product.1["title"].stringValue.replacingOccurrences(of: collections[collectionIndex].title + " ", with: "")
+			tempProduct.tags = product.1["tags"].stringValue.components(separatedBy: ", ")
+			tempProduct.image["url"] = product.1["image"]["src"].stringValue
+			tempProduct.image["name"] = tempProduct.title
+			
+			// calculate inventory total
+			for variant in product.1["variants"] {
 				
-				temp.append(id.1[collectionId].intValue)
+				tempProduct.inventory = tempProduct.inventory + variant.1["inventory_quantity"].intValue
 				
 			}
 			
-			// update the list of IDs
-			if flag == APICallFlags.allCollections {
-				
-				self.collectionIDs = temp
-				
-			}
-			else if flag == APICallFlags.collection {
-				
-				self.productIDs = temp
-				
-			}
-			
+			// add product to list of products
+			newProductList.append(tempProduct)
 			
 		}
+		
+		products = newProductList
+		
 	}
 	
 	private func extractCollectionDetails(json: JSON) {
 		
-		for index in json["custom_collections"] {
+		for collection in json["custom_collections"] {
 			
-			self.collectionTitles.append(index.1["title"].stringValue.replacingOccurrences(of: " collection", with: ""))
-			self.collectionImages.append(index.1["image"]["src"].stringValue)
+			let tempCollection = Collection()
+			
+			tempCollection.id = collection.1["id"].intValue
+			tempCollection.title = collection.1["title"].stringValue.replacingOccurrences(of: " collection", with: "")
+			tempCollection.body = collection.1["body_html"].stringValue
+			tempCollection.image["url"] = collection.1["image"]["src"].stringValue
+			tempCollection.image["name"] = tempCollection.title
+			
+			collections.append(tempCollection)
 			
 		}
 		
 	}
 	
-	private func getCollectionQueryVals(flag: APICallFlags) -> (String, String)? {
+	private func extractCollectionProductIDs(json: JSON, collectionID: Int) {
 		
-		// check which flag is set
-		if flag == APICallFlags.allCollections {
+		// check if the index of the requested collection exists
+		if collections.contains(where: { $0.id == collectionID }) {
 			
-			return ("custom_collections", "id")
+			// get the index of the requested collection
+			guard let collectionIndex: Int = collections.firstIndex(where: { $0.id == collectionID }) else { return }
+			
+			var products: [Int] = []
+			
+			// get all product IDs
+			for product in json["collects"] {
+				
+				let productID = product.1["product_id"].intValue
+				
+				// check if the collection already contains this product
+				if !products.contains(productID) {
+					
+					products.append(productID)
+					
+				}
+				
+				
+			}
+			
+			collections[collectionIndex].products = products
 			
 		}
-		else if flag == APICallFlags.collection {
+		
+	}
+	
+	private func extractCollectionIDFromURL(url: String) -> Int? {
+		
+		if url.contains("collection_id=") {
 			
-			return ("collects", "product_id")
-			
+			let firstSplit = url.components(separatedBy: "=")
+			if firstSplit.count > 1 {
+				
+				let secondSplit = firstSplit[1].components(separatedBy: "&")
+				if secondSplit.count > 0 {
+					
+					return Int(secondSplit[0])
+
+				}
+				
+			}
 		}
 		
 		return nil
@@ -172,17 +203,22 @@ public class APIDataRequest {
 		
 	}
 	
-	func getProductsURL() -> String {
+	func getProductsURL() -> String? {
+		
+		guard let collectionID = selectedCollectionID else { return nil }
+		
+		// get the index of the requested collection
+		guard let collectionIndex: Int = collections.firstIndex(where: { $0.id == collectionID }) else { return nil }
 		
 		// the product IDs added together and separated by a comma
 		var idStringList: String = ""
 		
-		for (index, id) in self.productIDs.enumerated() {
+		for (index, product) in self.collections[collectionIndex].products.enumerated() {
 			
-			idStringList += "\(id)"
+			idStringList += "\(product)"
 			
 			// add comma if not the last id in list of ids
-			if index != self.productIDs.endIndex-1 {
+			if index != self.collections[collectionIndex].products.endIndex-1 {
 				idStringList += ","
 			}
 			

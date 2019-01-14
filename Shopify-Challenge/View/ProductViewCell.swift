@@ -10,7 +10,9 @@ import UIKit
 
 class ProductViewCell: UITableViewCell {
 	
-	@IBOutlet weak var cellImage: UIImageView!
+	
+	@IBOutlet weak var cellProductImage: UIImageView!
+	@IBOutlet weak var cellCollectionImage: UIImageView!
 	@IBOutlet weak var cellProductName: UILabel!
 	@IBOutlet weak var cellCollectionName: UILabel!
 	@IBOutlet weak var cellProductInventory: UILabel!
