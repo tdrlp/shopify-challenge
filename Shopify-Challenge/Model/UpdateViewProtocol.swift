@@ -9,6 +9,10 @@
 import Foundation
 import SwiftyJSON
 
+/*
+	Description: This protocol is used by the asynchronous API calls  in
+	order to update the view controller on what is going on
+*/
 @objc protocol UpdateViewProtocol {
 	
 	func updateView()

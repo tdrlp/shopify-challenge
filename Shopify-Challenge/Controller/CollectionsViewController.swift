@@ -23,20 +23,19 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		// set the appropriate titles for the view
+		navigationController?.navigationBar.prefersLargeTitles = true
 		navigationItem.title = "Collections"
 		self.title = "Collections"
-		navigationController?.navigationBar.prefersLargeTitles = true
 		
 		data.viewDelegate = self
 		
+		// show the loading circle
 		SVProgressHUD.show()
 		
 		// get data to fill collections with
 		data.requestData(url: APIDataRequest.collectionsURL)
 		
-		// search button
-		let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
-		navigationItem.rightBarButtonItem = searchButton
 	}
 	
 	override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -47,14 +46,13 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 	
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		
-		print("THERE ARE: \(data.collections.count) COLLECTIONS")
 		return data.collections.count
 		
 	}
 	
-	// return size of each square including padding
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
+		// determine the sizing and how each collection should fit in the grid
 		let paddingSpace = sectionInsets.left * CGFloat(collectionsPerRow * 2)
 		let availableWidth = view.frame.width - paddingSpace
 		let widthPerItem = availableWidth / CGFloat(collectionsPerRow)
@@ -64,14 +62,12 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 
 	}
 	
-	// spacing all around
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
 
 		return sectionInsets
 
 	}
 	
-	// spacing between lines in layout
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
 
 		return sectionInsets.left * 2
@@ -81,6 +77,8 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! CollectionViewCell
+		
+		// set the cell properties in order to give it the rounded corners with a shadow shape
 		cell.backgroundColor = .white
 		cell.layer.borderColor = UIColor.lightGray.cgColor
 		cell.layer.borderWidth = 0.5
@@ -98,6 +96,7 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 			// set the cell label
 			cell.cellLabel.text = data.collections[indexPath.item].title
 			
+			// load the collection image
 			if let image = LoadImage.load(imageName: data.collections[indexPath.item].title, imageSrc: data.collections[indexPath.item].image["url"] as! String) {
 				
 				cell.cellImage.image = image
@@ -111,6 +110,7 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 	
 	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		
+		// save the index of the selected collection
 		self.selectedCollectionIndex = indexPath.item
 		
 		performSegue(withIdentifier: "goToProductsPage", sender: self)
@@ -129,6 +129,10 @@ class CollectionsViewController: UICollectionViewController, UICollectionViewDel
 		
 	}
 	
+	/*
+		Description: This method is called once all the product information has been obtained
+		and reloads the tableview with the new data.
+	*/
 	func updateView() {
 		
 		self.collectionView.reloadData()

@@ -31,32 +31,34 @@ public class APIDataRequest {
 		
 	}
 	
-	//
+	/*
+		Description: This method makes the API request and handles the response
+	*/
 	func requestData(url: String) {
 		
 		Alamofire.request(url).responseJSON { (response) in
 			
-			print("REQUEST: \(String(describing: response.request))")
+			//print("REQUEST: \(String(describing: response.request))")
 			//print("RESPONSE: \(String(describing: response.response))")
 			
 			if let json = response.result.value {
 				
-				// save the returned json
 				self.JsonData = JSON(json)
 				
 				guard let flag: APICallFlags = self.getUrlType(url: url) else {	return }
 				
-				// determine which json was requested
+				// the collections json was requested
 				if flag == APICallFlags.allCollections {
 					
 					self.extractCollectionDetails(json: self.JsonData!)
 					
-					// update the UI
 					self.viewDelegate?.updateView()
 					
 				}
+				// the collection product list json was requested
 				else if flag == APICallFlags.collection {
 					
+					// pull the collection id from the url
 					guard let id = self.extractCollectionIDFromURL(url: url) else { return }
 					self.selectedCollectionID = id
 					self.extractCollectionProductIDs(json: self.JsonData!, collectionID: id)
@@ -65,6 +67,7 @@ public class APIDataRequest {
 					self.viewDelegate?.productListUpdated!()
 					
 				}
+				// the products information json was requested
 				else if flag == APICallFlags.products {
 					
 					self.extractProductsInformation(json: self.JsonData!)
@@ -76,6 +79,9 @@ public class APIDataRequest {
 		}
 	}
 	
+	/*
+		Description: This method identifies which of the 3 urls was passed in
+	*/
 	private func getUrlType(url: String) -> APICallFlags? {
 		
 		if url.contains("custom_collections.json") {
@@ -92,6 +98,10 @@ public class APIDataRequest {
 		
 	}
 	
+	/*
+		Description: This method extracts the information about the products and puts them
+		in a products list for easy access
+	*/
 	private func extractProductsInformation(json: JSON) {
 
 		var newProductList: [Product] = []
@@ -127,6 +137,10 @@ public class APIDataRequest {
 		
 	}
 	
+	/*
+		Description: This method extracts the information about a collection and appends this collection
+		to the list of collections
+	*/
 	private func extractCollectionDetails(json: JSON) {
 		
 		for collection in json["custom_collections"] {
@@ -145,6 +159,9 @@ public class APIDataRequest {
 		
 	}
 	
+	/*
+		Description: This method extracts all the product IDs associated with a specific collection
+	*/
 	private func extractCollectionProductIDs(json: JSON, collectionID: Int) {
 		
 		// check if the index of the requested collection exists
@@ -166,8 +183,6 @@ public class APIDataRequest {
 					products.append(productID)
 					
 				}
-				
-				
 			}
 			
 			collections[collectionIndex].products = products
@@ -176,6 +191,9 @@ public class APIDataRequest {
 		
 	}
 	
+	/*
+		Description: This method extracts the collection ID from a url
+	*/
 	private func extractCollectionIDFromURL(url: String) -> Int? {
 		
 		if url.contains("collection_id=") {
@@ -189,7 +207,6 @@ public class APIDataRequest {
 					return Int(secondSplit[0])
 
 				}
-				
 			}
 		}
 		
@@ -197,12 +214,19 @@ public class APIDataRequest {
 		
 	}
 	
+	/*
+		Description: This method constructs the url to request the product list for a specific collection
+	*/
 	func getCollectionURL(collectionID: Int) -> String {
 		
 		return "https://shopicruit.myshopify.com/admin/collects.json?collection_id=\(collectionID)&page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6"
 		
 	}
 	
+	/*
+		Description: This method constructs the url to request the products information for a list
+		of products
+	*/
 	func getProductsURL() -> String? {
 		
 		guard let collectionID = selectedCollectionID else { return nil }
